@@ -101,67 +101,137 @@ class _WebHomeState extends State<WebHome> {
 
   /// ================= NAVBAR =================
   Widget _navbar(double contentWidth) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 768;
+
     return Center(
       child: SizedBox(
         width: contentWidth,
-        child: Row(
-          children: [
-            const Text(
-              "blinkit",
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                color: Color(0xfff6c800),
-              ),
-            ),
-
-            const SizedBox(width: 40),
-
-            const Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Delivery in 12 minutes",
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-                Text("Pune Railway Station, Pune",
-                    style: TextStyle(fontSize: 13)),
-              ],
-            ),
-
-            const Spacer(),
-
-            /// 🔥 Animated Search
-            const BlinkitWebSearchField(),
-
-            const Spacer(),
-
-            GestureDetector(
-              onTap: _openLoginDialog,
-              child: const Text("Login",style: TextStyle(fontWeight: FontWeight.w300,fontSize: 18),),
-            ),
-
-            const SizedBox(width: 20),
-
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              decoration: BoxDecoration(
-                color: Colors.grey.shade400,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Row(
+        child: isMobile
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(Icons.shopping_cart_outlined),
-                  const SizedBox(width: 5,),
-                  const Text("My Cart"),
-                  
+                  const SizedBox(height: 10),
+                  const Text(
+                    "blinkit",
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xfff6c800),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  const BlinkitWebSearchField(),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        onTap: _openLoginDialog,
+                        child: const Text("Login"),
+                      ),
+                      const Icon(Icons.shopping_cart_outlined),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                ],
+              )
+            : Row(
+                children: [
+                  const Text(
+                    "blinkit",
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xfff6c800),
+                    ),
+                  ),
+                  const SizedBox(width: 40),
+                  const Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Delivery in 12 minutes",
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      Text("Pune Railway Station, Pune",
+                          style: TextStyle(fontSize: 13)),
+                    ],
+                  ),
+                  const Spacer(),
+                  const BlinkitWebSearchField(),
+                  const Spacer(),
+                  GestureDetector(
+                    onTap: _openLoginDialog,
+                    child: const Text("Login"),
+                  ),
+                  const SizedBox(width: 20),
+                  const Icon(Icons.shopping_cart_outlined),
                 ],
               ),
-            )
-          ],
-        ),
       ),
     );
   }
+  // Widget _navbar(double contentWidth) {
+  //   return Center(
+  //     child: SizedBox(
+  //       width: contentWidth,
+  //       child: Row(
+  //         children: [
+  //           const Text(
+  //             "blinkit",
+  //             style: TextStyle(
+  //               fontSize: 28,
+  //               fontWeight: FontWeight.bold,
+  //               color: Color(0xfff6c800),
+  //             ),
+  //           ),
+
+  //           const SizedBox(width: 40),
+
+  //           const Column(
+  //             mainAxisAlignment: MainAxisAlignment.center,
+  //             crossAxisAlignment: CrossAxisAlignment.start,
+  //             children: [
+  //               Text("Delivery in 12 minutes",
+  //                   style: TextStyle(fontWeight: FontWeight.bold)),
+  //               Text("Pune Railway Station, Pune",
+  //                   style: TextStyle(fontSize: 13)),
+  //             ],
+  //           ),
+
+  //           const Spacer(),
+
+  //           /// 🔥 Animated Search
+  //           const BlinkitWebSearchField(),
+
+  //           const Spacer(),
+
+  //           GestureDetector(
+  //             onTap: _openLoginDialog,
+  //             child: const Text("Login",style: TextStyle(fontWeight: FontWeight.w300,fontSize: 18),),
+  //           ),
+
+  //           const SizedBox(width: 20),
+
+  //           Container(
+  //             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+  //             decoration: BoxDecoration(
+  //               color: Colors.grey.shade400,
+  //               borderRadius: BorderRadius.circular(10),
+  //             ),
+  //             child: Row(
+  //               children: [
+  //                 Icon(Icons.shopping_cart_outlined),
+  //                 const SizedBox(width: 5,),
+  //                 const Text("My Cart"),
+
+  //               ],
+  //             ),
+  //           )
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   /// ================= HERO =================
   Widget _heroBanner() {
@@ -282,7 +352,7 @@ class _WebLoginDialogState extends State<_WebLoginDialog>
   @override
   void initState() {
     super.initState();
-    
+
     // Entry animation controller
     _entryController = AnimationController(
       vsync: this,
@@ -300,7 +370,7 @@ class _WebLoginDialogState extends State<_WebLoginDialog>
         curve: Curves.easeOut,
       ),
     );
-    
+
     // Success animation controller
     _successController = AnimationController(
       vsync: this,
@@ -324,10 +394,10 @@ class _WebLoginDialogState extends State<_WebLoginDialog>
         curve: Curves.easeOutCubic,
       ),
     );
-    
+
     // Start entry animation
     _entryController.forward();
-    
+
     // Auto-focus first OTP field when OTP step is shown
     if (_showOtpStep) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -367,7 +437,10 @@ class _WebLoginDialogState extends State<_WebLoginDialog>
     }
     // Check if it starts with 6, 7, 8, or 9 (valid Indian mobile number prefixes)
     final firstDigit = cleaned[0];
-    return firstDigit == '6' || firstDigit == '7' || firstDigit == '8' || firstDigit == '9';
+    return firstDigit == '6' ||
+        firstDigit == '7' ||
+        firstDigit == '8' ||
+        firstDigit == '9';
   }
 
   Future<void> _sendOtp() async {
@@ -375,7 +448,7 @@ class _WebLoginDialogState extends State<_WebLoginDialog>
       _errorText = '';
     });
     final phone = _phoneController.text.trim();
-    
+
     // Validate phone number
     if (phone.isEmpty) {
       setState(() {
@@ -383,18 +456,18 @@ class _WebLoginDialogState extends State<_WebLoginDialog>
       });
       return;
     }
-    
+
     if (!_isValidPhoneNumber(phone)) {
       setState(() {
         _errorText = 'Please enter a valid 10-digit mobile number';
       });
       return;
     }
-    
+
     // Store formatted phone number for display
     final cleanedPhone = phone.replaceAll(RegExp(r'[^\d]'), '');
     _phoneNumber = '+91 $cleanedPhone';
-    
+
     setState(() => _isSendingOtp = true);
     await Future.delayed(const Duration(seconds: 1));
     if (!mounted) return;
@@ -648,9 +721,7 @@ class _WebLoginDialogState extends State<_WebLoginDialog>
             onPressed: _showOtpStep
                 ? (_isVerifying ? null : _verifyOtp)
                 : (_isSendingOtp ? null : _sendOtp),
-            child: (_showOtpStep
-                    ? _isVerifying
-                    : _isSendingOtp)
+            child: (_showOtpStep ? _isVerifying : _isSendingOtp)
                 ? const SizedBox(
                     width: 20,
                     height: 20,
