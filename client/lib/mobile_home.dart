@@ -19,14 +19,15 @@ class _MobileHomeState extends State<MobileHome> {
     "assets/promo2.png",
   ];
 
-  final List<String> products = [
-    "assets/products/dairy_products.png",
-    "assets/products/drinks_juice.png",
-    "assets/products/fruit_veggies.png",
-    "assets/products/pan_corner.png",
-    "assets/products/breakfast_food.png",
-    "assets/products/sweet_tooth.png",
-    "assets/products/bakery_biscuit.png"
+  final List<Map<String, String>> categories = [
+    {"image": "assets/products/pan_corner.png", "title": "Paan\nCorner"},
+    {"image": "assets/products/dairy_products.png", "title": "Dairy, Bread\n& Eggs"},
+    {"image": "assets/products/fruit_veggies.png", "title": "Fruits &\nVegetables"},
+    {"image": "assets/products/drinks_juice.png", "title": "Cold Drinks\n& Juices"},
+    {"image": "assets/products/snacks.png", "title": "Snacks &\nMunchies"},
+    {"image": "assets/products/breakfast_food.png", "title": "Breakfast &\nInstant Food"},
+    {"image": "assets/products/sweet_tooth.png", "title": "Sweet\nTooth"},
+    {"image": "assets/products/bakery_biscuit.png", "title": "Bakery &\nBiscuits"},
   ];
 
   @override
@@ -195,51 +196,94 @@ class _MobileHomeState extends State<MobileHome> {
 
               const SizedBox(height: 25),
 
-              /// ================= PRODUCTS =================
+              /// ================= CATEGORIES HEADER =================
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: const Text(
-                  "Best Sellers",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    const Text(
+                      "Dairy, Bread & Eggs",
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w800,
+                        color: Color(0xFF1E1E1E),
+                        letterSpacing: -0.4,
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {},
+                      style: TextButton.styleFrom(
+                        foregroundColor: const Color(0xFF0C831F),
+                        textStyle: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                        ),
+                        padding: EdgeInsets.zero,
+                        minimumSize: Size.zero,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      child: const Text("see all"),
+                    ),
+                  ],
                 ),
               ),
 
               const SizedBox(height: 15),
 
-              SizedBox(
-                height: 200,
-                child: ListView.separated(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  scrollDirection: Axis.horizontal,
-                  separatorBuilder: (_, __) => const SizedBox(width: 12),
-                  itemCount: products.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      width: 140,
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.05),
-                            blurRadius: 6,
-                            offset: const Offset(0, 3),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        children: [
-                          Expanded(
-                            child: Image.asset(
-                              products[index],
-                              fit: BoxFit.contain,
+              /// ================= CATEGORIES WRAP (GRID) =================
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Wrap(
+                    spacing: 12,
+                    runSpacing: 24,
+                    alignment: WrapAlignment.spaceBetween,
+                    children: List.generate(
+                      categories.length,
+                      (index) => SizedBox(
+                        width: (MediaQuery.of(context).size.width - 32 - (3 * 12)) / 4, // 4 items per row accounting for spacing and padding
+                        child: Column(
+                          children: [
+                            AspectRatio(
+                              aspectRatio: 0.9,
+                              child: Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFF4F6FB),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Hero(
+                                  tag: 'mobile_category_$index',
+                                  child: Image.asset(
+                                    categories[index]["image"]!,
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                        ],
+                            const SizedBox(height: 8),
+                            Text(
+                              categories[index]["title"]!.replaceAll("\n", " "),
+                              textAlign: TextAlign.center,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xFF333333),
+                                height: 1.2,
+                                letterSpacing: -0.2,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    );
-                  },
+                    ),
+                  ),
                 ),
               ),
 

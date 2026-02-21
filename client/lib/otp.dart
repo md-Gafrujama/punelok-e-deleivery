@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'homescreen.dart';
 
 // ─── OTP Page ─────────────────────────────────────────────────────────────────
 class OtpPage extends StatefulWidget {
@@ -679,7 +680,13 @@ class _OtpPageState extends State<OtpPage> with TickerProviderStateMixin {
                         borderRadius: BorderRadius.circular(16),
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (_) => const HomeScreen()),
+                        (route) => false,
+                      );
+                    },
                     child: const Text(
                       "Explore Menu 🍟",
                       style: TextStyle(

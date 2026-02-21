@@ -11,11 +11,15 @@ class WebHome extends StatefulWidget {
 
 class _WebHomeState extends State<WebHome> {
   final ScrollController _scrollController = ScrollController();
-  final List<String> products = [
-    "assets/products/dairy_products.png",
-    "assets/products/drinks_juice.png",
-    "assets/products/fruit_veggies.png",
-    "assets/products/pan_corner.png"
+  final List<Map<String, String>> categories = [
+    {"image": "assets/products/pan_corner.png", "title": "Paan\nCorner"},
+    {"image": "assets/products/dairy_products.png", "title": "Dairy, Bread\n& Eggs"},
+    {"image": "assets/products/fruit_veggies.png", "title": "Fruits &\nVegetables"},
+    {"image": "assets/products/drinks_juice.png", "title": "Cold Drinks\n& Juices"},
+    {"image": "assets/products/snacks.png", "title": "Snacks &\nMunchies"},
+    {"image": "assets/products/breakfast_food.png", "title": "Breakfast &\nInstant Food"},
+    {"image": "assets/products/sweet_tooth.png", "title": "Sweet\nTooth"},
+    {"image": "assets/products/bakery_biscuit.png", "title": "Bakery &\nBiscuits"},
   ];
 
   void _openLoginDialog() {
@@ -42,10 +46,19 @@ class _WebHomeState extends State<WebHome> {
           SliverAppBar(
             pinned: true,
             backgroundColor: Colors.white,
-            // expandedHeight: 80,
-            elevation: 1,
+            toolbarHeight: 86,
+            elevation: 0,
             titleSpacing: 0,
+            shadowColor: Colors.black12,
+            forceElevated: true,
             title: _navbar(contentWidth),
+            bottom: PreferredSize(
+              preferredSize: const Size.fromHeight(1.0),
+              child: Container(
+                color: Colors.grey.withOpacity(0.15),
+                height: 1.0,
+              ),
+            ),
           ),
 
           /// ================= BODY =================
@@ -75,16 +88,47 @@ class _WebHomeState extends State<WebHome> {
 
                     const SizedBox(height: 50),
 
-                    /// PRODUCTS
+                    /// CATEGORY SECTION HEADER
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        const Text(
+                          "Dairy, Bread & Eggs",
+                          style: TextStyle(
+                            fontSize: 26,
+                            fontWeight: FontWeight.w800,
+                            color: Color(0xFF1E1E1E),
+                            letterSpacing: -0.4,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {},
+                          style: TextButton.styleFrom(
+                            foregroundColor: const Color(0xFF0C831F),
+                            textStyle: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700,
+                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          ),
+                          child: const Text("see all"),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
+
+                    /// CATEGORIES WRAP (GRID)
                     SizedBox(
-                      height: 220,
-                      child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: products.length,
-                        separatorBuilder: (_, __) => const SizedBox(width: 20),
-                        itemBuilder: (context, index) {
-                          return _hoverProductCard(index);
-                        },
+                      width: double.infinity,
+                      child: Wrap(
+                        spacing: 28,
+                        runSpacing: 36,
+                        alignment: WrapAlignment.start,
+                        children: List.generate(
+                          categories.length,
+                          (index) => _hoverProductCard(index),
+                        ),
                       ),
                     ),
 
@@ -105,66 +149,121 @@ class _WebHomeState extends State<WebHome> {
     final isMobile = screenWidth < 768;
 
     return Center(
-      child: SizedBox(
+      child: Container(
         width: contentWidth,
+        padding: const EdgeInsets.symmetric(vertical: 10),
         child: isMobile
             ? Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 10),
-                  const Text(
-                    "blinkit",
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xfff6c800),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  const BlinkitWebSearchField(),
-                  const SizedBox(height: 10),
-                  Row(
+                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      const Text(
+                        "blinkit",
+                        style: TextStyle(
+                          fontSize: 26,
+                          fontWeight: FontWeight.w900,
+                          color: Color(0xfff6c800),
+                          letterSpacing: -0.5,
+                        ),
+                      ),
                       GestureDetector(
                         onTap: _openLoginDialog,
-                        child: const Text("Login"),
+                        child: const Text("Login", style: TextStyle(fontWeight: FontWeight.w600)),
                       ),
-                      const Icon(Icons.shopping_cart_outlined),
                     ],
                   ),
                   const SizedBox(height: 10),
+                  const BlinkitWebSearchField(),
                 ],
               )
             : Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const Text(
                     "blinkit",
                     style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 34,
+                      fontWeight: FontWeight.w900,
                       color: Color(0xfff6c800),
+                      letterSpacing: -1.0,
+                      height: 1.0,
                     ),
                   ),
-                  const SizedBox(width: 40),
-                  const Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Delivery in 12 minutes",
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                      Text("Pune Railway Station, Pune",
-                          style: TextStyle(fontSize: 13)),
-                    ],
+                  const SizedBox(width: 48),
+                  
+                  // Location Address Block
+                  InkWell(
+                    onTap: () {},
+                    borderRadius: BorderRadius.circular(12),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            "Delivery in 12 minutes",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 14,
+                              color: Colors.black87,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Row(
+                            children: [
+                              Text(
+                                "Pune Railway Station, Pune",
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  color: Colors.grey[700],
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              Icon(Icons.arrow_drop_down_rounded, color: Colors.grey[600], size: 20),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                  const Spacer(),
-                  const BlinkitWebSearchField(),
-                  const Spacer(),
-                  GestureDetector(
-                    onTap: _openLoginDialog,
+                  
+                  const SizedBox(width: 40),
+                  const Expanded(child: BlinkitWebSearchField()),
+                  const SizedBox(width: 40),
+                  
+                  TextButton(
+                    onPressed: _openLoginDialog,
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.black87,
+                      textStyle: const TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    ),
                     child: const Text("Login"),
                   ),
-                  const SizedBox(width: 20),
-                  const Icon(Icons.shopping_cart_outlined),
+                  const SizedBox(width: 24),
+                  
+                  ElevatedButton.icon(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF0C831F), // blinkit green
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    icon: const Icon(Icons.shopping_cart_outlined, size: 20),
+                    label: const Text(
+                      "My Cart",
+                      style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
+                    ),
+                  ),
                 ],
               ),
       ),
@@ -249,40 +348,62 @@ class _WebHomeState extends State<WebHome> {
   /// ================= HOVER PROMO CARD =================
   Widget _hoverCard(String image) {
     return _HoverScale(
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
-        child: Image.asset(
-          image,
-          height: 180,
-          fit: BoxFit.cover,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.08),
+              blurRadius: 24,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(16),
+          child: Image.asset(
+            image,
+            height: 180,
+            fit: BoxFit.cover,
+          ),
         ),
       ),
     );
   }
 
-  /// ================= PRODUCT CARD =================
+  /// ================= PRODUCT CATEGORY CARD =================
   Widget _hoverProductCard(int index) {
     return _HoverScale(
-      child: Container(
-        width: 160,
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 6,
-              offset: const Offset(0, 3),
-            ),
-          ],
-        ),
+      child: SizedBox(
+        width: 110, // Fixed width for clear grid alignment
         child: Column(
           children: [
-            Expanded(
-              child: Image.asset(
-                products[index],
-                fit: BoxFit.contain,
+            Container(
+              width: 110,
+              height: 120,
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF4F6FB), // Light blue modern background
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Hero(
+                tag: 'category_$index',
+                child: Image.asset(
+                  categories[index]["image"]!,
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              categories[index]["title"]!,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: Color(0xFF333333),
+                height: 1.25,
+                letterSpacing: -0.1,
               ),
             ),
           ],
@@ -651,19 +772,37 @@ class _WebLoginDialogState extends State<_WebLoginDialog>
         const SizedBox(height: 20),
         // Content fields
         if (!_showOtpStep) ...[
-          TextField(
-            controller: _phoneController,
-            keyboardType: TextInputType.phone,
-            inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly,
-              LengthLimitingTextInputFormatter(10),
-            ],
-            decoration: const InputDecoration(
-              labelText: 'Phone number',
-              hintText: 'Enter 10-digit mobile number',
-              prefixText: '+91 ',
-              border: OutlineInputBorder(),
-              errorText: null,
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.grey[50],
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: Colors.grey[300]!),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+            child: Row(
+              children: [
+                const Text("+91", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                const SizedBox(width: 12),
+                Container(width: 1, height: 24, color: Colors.grey[300]),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: TextField(
+                    controller: _phoneController,
+                    keyboardType: TextInputType.phone,
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(10),
+                    ],
+                    decoration: InputDecoration(
+                      hintText: 'Enter mobile number',
+                      hintStyle: TextStyle(color: Colors.grey[400]),
+                      border: InputBorder.none,
+                      errorText: null,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ] else ...[
@@ -671,13 +810,21 @@ class _WebLoginDialogState extends State<_WebLoginDialog>
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: List.generate(
               4,
-              (i) => SizedBox(
-                width: 60,
+              (i) => Container(
+                width: 64,
+                height: 64,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: Colors.grey[50],
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: Colors.grey[300]!),
+                ),
                 child: TextField(
                   controller: _otpControllers[i],
                   focusNode: _otpFocusNodes[i],
                   keyboardType: TextInputType.number,
                   textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w800),
                   maxLength: 1,
                   onChanged: (value) => _onOtpChanged(value, i),
                   inputFormatters: [
@@ -685,7 +832,7 @@ class _WebLoginDialogState extends State<_WebLoginDialog>
                   ],
                   decoration: const InputDecoration(
                     counterText: '',
-                    border: OutlineInputBorder(),
+                    border: InputBorder.none,
                   ),
                 ),
               ),
@@ -709,13 +856,15 @@ class _WebLoginDialogState extends State<_WebLoginDialog>
         // Button with consistent styling
         SizedBox(
           width: double.infinity,
-          height: 44,
+          height: 54,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: _yellow,
               foregroundColor: Colors.white,
+              elevation: 4,
+              shadowColor: _yellow.withOpacity(0.4),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(16),
               ),
             ),
             onPressed: _showOtpStep

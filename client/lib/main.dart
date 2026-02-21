@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:blinkit/food_login.dart';
 import 'package:blinkit/homescreen.dart';
 import 'package:flutter/foundation.dart';
@@ -12,10 +13,18 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       color: Colors.white,
       debugShowCheckedModeBanner: false,
-      home: _RootDecider(),
+      scrollBehavior: const MaterialScrollBehavior().copyWith(
+        dragDevices: {
+          PointerDeviceKind.mouse,
+          PointerDeviceKind.touch,
+          PointerDeviceKind.stylus,
+          PointerDeviceKind.unknown,
+        },
+      ),
+      home: const _RootDecider(),
     );
   }
 }
