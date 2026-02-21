@@ -1,4 +1,3 @@
-
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -214,7 +213,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             builder: (_, __) {
               final f = _float.value;
               final bounce = sin(f * pi) * 10;
-              final tilt = sin(_floatCtrl.value * pi * 2) * 0.04;
+              final tilt = sin(_floatCtrl.value * pi * 2) * 0.02;
+
               return SizedBox(
                 width: size.width,
                 height: bgH,
@@ -224,12 +224,12 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                     child: Transform.rotate(
                       angle: tilt,
                       child: Transform.scale(
-                        scale: 1.15,
+                        scale: 1.25, // 🔥 important
                         child: Image.asset(
                           'assets/burger.jpeg',
                           fit: BoxFit.cover,
-                          width: size.width,
-                          height: bgH + 60,
+                          width: size.width * 1.2, // 🔥 wider
+                          height: bgH * 1.3, // 🔥 taller
                         ),
                       ),
                     ),
@@ -290,12 +290,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
               opacity: _cardFade,
               child: SlideTransition(
                 position: _cardSlide,
-                child: Center(
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 480),
-                    child: _buildCard(size),
-                  ),
-                ),
+                child: _buildCard(size),
               ),
             ),
           ),
@@ -548,33 +543,34 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   }
 
   InputDecoration _dec(String hint, IconData icon) => InputDecoration(
-    hintText: hint,
-    hintStyle: TextStyle(color: Colors.grey[400], fontSize: 14),
-    prefixIcon: Icon(icon, color: Colors.grey[400], size: 20),
-    filled: true,
-    fillColor: const Color(0xFFFAFAFA),
-    contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 14),
-    border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(14),
-      borderSide: BorderSide(color: Colors.grey[300]!),
-    ),
-    enabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(14),
-      borderSide: BorderSide(color: Colors.grey[300]!),
-    ),
-    focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(14),
-      borderSide: const BorderSide(color: _yellow, width: 2.2),
-    ),
-    errorBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(14),
-      borderSide: const BorderSide(color: Colors.redAccent),
-    ),
-    focusedErrorBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(14),
-      borderSide: const BorderSide(color: Colors.redAccent, width: 2),
-    ),
-  );
+        hintText: hint,
+        hintStyle: TextStyle(color: Colors.grey[400], fontSize: 14),
+        prefixIcon: Icon(icon, color: Colors.grey[400], size: 20),
+        filled: true,
+        fillColor: const Color(0xFFFAFAFA),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 18, horizontal: 14),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: BorderSide(color: Colors.grey[300]!),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: BorderSide(color: Colors.grey[300]!),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: const BorderSide(color: _yellow, width: 2.2),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: const BorderSide(color: Colors.redAccent),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: const BorderSide(color: Colors.redAccent, width: 2),
+        ),
+      );
 
   Widget _socialBtn(String label, IconData icon, Color iconColor) {
     final isGoogle = label.contains('Google');
@@ -590,9 +586,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             color: isGoogle ? baseColor.withOpacity(0.7) : Colors.grey[300]!,
             width: isGoogle ? 1.6 : 1.2,
           ),
-          backgroundColor: isGoogle
-              ? Colors.white
-              : const Color(0xFFFDFDFD),
+          backgroundColor: isGoogle ? Colors.white : const Color(0xFFFDFDFD),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(28),
           ),
@@ -637,276 +631,3 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     );
   }
 }
-
-// ─── OTP Sent Page ────────────────────────────────────────────────────────────
-class OtpSentPage extends StatefulWidget {
-  const OtpSentPage({super.key});
-  @override
-  State<OtpSentPage> createState() => _OtpSentPageState();
-}
-
-class _OtpSentPageState extends State<OtpSentPage>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _c;
-  late Animation<double> _scale, _fade;
-
-  @override
-  void initState() {
-    super.initState();
-    _c = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 900),
-    );
-    _scale = Tween<double>(
-      begin: 0.5,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _c, curve: Curves.elasticOut));
-    _fade = CurvedAnimation(parent: _c, curve: Curves.easeIn);
-    _c.forward();
-  }
-
-  @override
-  void dispose() {
-    _c.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFFFC107),
-      body: Center(
-        child: FadeTransition(
-          opacity: _fade,
-          child: ScaleTransition(
-            scale: _scale,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 100,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.15),
-                        blurRadius: 24,
-                        spreadRadius: 4,
-                      ),
-                    ],
-                  ),
-                  child: const Center(
-                    child: Text('🍔', style: TextStyle(fontSize: 50)),
-                  ),
-                ),
-                const SizedBox(height: 26),
-                const Text(
-                  "OTP Sent! 🎉",
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.w900,
-                    color: Colors.white,
-                    letterSpacing: -0.5,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  "Check your phone",
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.white.withOpacity(0.85),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// import 'package:flutter/material.dart';
-
-// class Login2 extends StatefulWidget {
-//   const Login2({super.key});
-
-//   @override
-//   State<Login2> createState() => _Login2State();
-// }
-
-// class _Login2State extends State<Login2> {
-//   final TextEditingController phoneController = TextEditingController();
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: Colors.white,
-//       body: SafeArea(
-//         child: SingleChildScrollView(
-//           padding: const EdgeInsets.symmetric(horizontal: 20),
-//           child: Column(
-//             children: [
-//               const SizedBox(height: 100),
-
-//               // Main Card
-//               Container(
-//                 padding: const EdgeInsets.all(20),
-//                 decoration: BoxDecoration(
-//                   color: const Color(0xFFEEE8E8),
-//                   borderRadius: BorderRadius.circular(30),
-//                 ),
-//                 child: Column(
-//                   crossAxisAlignment: CrossAxisAlignment.start,
-//                   children: [
-//                     const Text(
-//                       "Login",
-//                       style: TextStyle(
-//                         fontSize: 28,
-//                         fontWeight: FontWeight.bold,
-//                       ),
-//                     ),
-
-//                     const SizedBox(height: 30),
-
-//                     // Phone Input
-//                     Container(
-//                       padding: const EdgeInsets.symmetric(horizontal: 12),
-//                       decoration: BoxDecoration(
-//                         color: const Color(0xFFD9D9D9),
-//                         borderRadius: BorderRadius.circular(12),
-//                         border: Border.all(color: Colors.black),
-//                       ),
-//                       child: Row(
-//                         children: [
-//                           const Text("+91", style: TextStyle(fontSize: 16)),
-
-//                           const SizedBox(width: 10),
-
-//                           Expanded(
-//                             child: TextField(
-//                               controller: phoneController,
-//                               keyboardType: TextInputType.phone,
-//                               decoration: const InputDecoration(
-//                                 hintText: "Enter Phone Number",
-//                                 border: InputBorder.none,
-//                               ),
-//                             ),
-//                           ),
-//                         ],
-//                       ),
-//                     ),
-
-//                     const SizedBox(height: 30),
-
-//                     // OTP Button
-//                     SizedBox(
-//                       width: double.infinity,
-//                       child: ElevatedButton(
-//                         style: ElevatedButton.styleFrom(
-//                           backgroundColor: const Color(0xFFDC3047),
-//                           padding: const EdgeInsets.symmetric(vertical: 15),
-//                           shape: RoundedRectangleBorder(
-//                             borderRadius: BorderRadius.circular(12),
-//                           ),
-//                         ),
-//                         onPressed: () {
-//                           print("Phone: ${phoneController.text}");
-//                         },
-//                         child: const Text(
-//                           "Send One Time Password",
-//                           style: TextStyle(fontSize: 16, color: Colors.black),
-//                         ),
-//                       ),
-//                     ),
-
-//                     const SizedBox(height: 25),
-
-//                     Row(
-//                       children: const [
-//                         Expanded(child: Divider(color: Colors.black)),
-//                         Padding(
-//                           padding: EdgeInsets.symmetric(horizontal: 8),
-//                           child: Text("or"),
-//                         ),
-//                         Expanded(child: Divider(color: Colors.black)),
-//                       ],
-//                     ),
-
-//                     const SizedBox(height: 25),
-
-//                     // Continue with Email
-//                     SizedBox(
-//                       width: double.infinity,
-//                       child: OutlinedButton(
-//                         style: OutlinedButton.styleFrom(
-//                           padding: const EdgeInsets.symmetric(vertical: 15),
-//                           backgroundColor: const Color(0xFFC5D7E4),
-//                           side: const BorderSide(color: Colors.black),
-//                           shape: RoundedRectangleBorder(
-//                             borderRadius: BorderRadius.circular(12),
-//                           ),
-//                         ),
-//                         onPressed: () {},
-//                         child: const Text(
-//                           "Continue with Email",
-//                           style: TextStyle(color: Colors.black),
-//                         ),
-//                       ),
-//                     ),
-
-//                     const SizedBox(height: 20),
-
-//                     // Google Button
-//                     SizedBox(
-//                       width: double.infinity,
-//                       child: OutlinedButton(
-//                         style: OutlinedButton.styleFrom(
-//                           padding: const EdgeInsets.symmetric(vertical: 15),
-//                           side: const BorderSide(color: Colors.black),
-//                           shape: RoundedRectangleBorder(
-//                             borderRadius: BorderRadius.circular(12),
-//                           ),
-//                         ),
-//                         onPressed: () {},
-//                         child: const Text(
-//                           "Sign in with Google",
-//                           style: TextStyle(color: Colors.black),
-//                         ),
-//                       ),
-//                     ),
-
-//                     const SizedBox(height: 30),
-
-//                     const Divider(color: Colors.black),
-
-//                     const SizedBox(height: 15),
-
-//                     Center(
-//                       child: GestureDetector(
-//                         onTap: () {},
-//                         child: const Text(
-//                           "Create Account",
-//                           style: TextStyle(
-//                             fontSize: 18,
-//                             color: Color(0xFFDC3047),
-//                             fontWeight: FontWeight.bold,
-//                           ),
-//                         ),
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-
-

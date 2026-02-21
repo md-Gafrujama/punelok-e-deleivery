@@ -1,7 +1,5 @@
-
 import 'dart:async';
 import 'dart:math';
-import 'package:blinkit/homescreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -244,7 +242,8 @@ class _OtpPageState extends State<OtpPage> with TickerProviderStateMixin {
             builder: (_, __) {
               final f = _float.value;
               final bounce = sin(f * pi) * 10;
-              final tilt = sin(_floatCtrl.value * pi * 2) * 0.04;
+              final tilt = sin(_floatCtrl.value * pi * 2) * 0.02;
+
               return SizedBox(
                 width: size.width,
                 height: bgH,
@@ -254,12 +253,12 @@ class _OtpPageState extends State<OtpPage> with TickerProviderStateMixin {
                     child: Transform.rotate(
                       angle: tilt,
                       child: Transform.scale(
-                        scale: 1.15,
+                        scale: 1.25, // 🔥 important
                         child: Image.asset(
                           'assets/burger.jpeg',
                           fit: BoxFit.cover,
-                          width: size.width,
-                          height: bgH + 60,
+                          width: size.width * 1.2, // 🔥 wider
+                          height: bgH * 1.3, // 🔥 taller
                         ),
                       ),
                     ),
@@ -298,14 +297,8 @@ class _OtpPageState extends State<OtpPage> with TickerProviderStateMixin {
               opacity: _cardFade,
               child: SlideTransition(
                 position: _cardSlide,
-                child: Center(
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 480),
-                    child: _isVerified
-                        ? _buildSuccessCard(size)
-                        : _buildOtpCard(size),
-                  ),
-                ),
+                child:
+                    _isVerified ? _buildSuccessCard(size) : _buildOtpCard(size),
               ),
             ),
           ),
@@ -686,14 +679,7 @@ class _OtpPageState extends State<OtpPage> with TickerProviderStateMixin {
                         borderRadius: BorderRadius.circular(16),
                       ),
                     ),
-                    onPressed: () {
-                      Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(
-                          builder: (_) => const HomeScreen(),
-                        ),
-                        (route) => false,
-                      );
-                    },
+                    onPressed: () {},
                     child: const Text(
                       "Explore Menu 🍟",
                       style: TextStyle(
@@ -727,8 +713,7 @@ class _OtpPageState extends State<OtpPage> with TickerProviderStateMixin {
             color: isGoogle ? baseColor.withOpacity(0.7) : Colors.grey[300]!,
             width: isGoogle ? 1.6 : 1.2,
           ),
-          backgroundColor:
-              isGoogle ? Colors.white : const Color(0xFFFDFDFD),
+          backgroundColor: isGoogle ? Colors.white : const Color(0xFFFDFDFD),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(28),
           ),
@@ -773,5 +758,3 @@ class _OtpPageState extends State<OtpPage> with TickerProviderStateMixin {
     );
   }
 }
-
-
