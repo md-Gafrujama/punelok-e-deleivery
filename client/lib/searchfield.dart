@@ -11,7 +11,11 @@ class BlinkitMobileSearchField extends StatefulWidget {
 
 class _BlinkitMobileSearchFieldState
     extends State<BlinkitMobileSearchField> {
-  final TextEditingController _controller = TextEditingController();
+   final TextEditingController _controller =
+      TextEditingController();
+
+  final PageController _pageController =
+      PageController();
 
   final List<String> hints = [
     'Search "milk"',
@@ -20,110 +24,100 @@ class _BlinkitMobileSearchFieldState
     'Search "snacks"',
   ];
 
-  final List<Color> colors = [
-    Colors.green,
-    Colors.orange,
-    Colors.blue,
-    Colors.red,
-  ];
-
-  int currentIndex = 0;
+  int currentPage = 0;
   Timer? timer;
-  bool isTyping = false;
 
   @override
   void initState() {
     super.initState();
 
-    timer = Timer.periodic(const Duration(seconds: 2), (_) {
-      if (!isTyping && _controller.text.isEmpty) {
-        setState(() {
-          currentIndex = (currentIndex + 1) % hints.length;
-        });
-      }
-    });
+    timer = Timer.periodic(
+      const Duration(seconds: 2),
+      (_) {
+        if (!mounted) return;
+        if (_controller.text.isNotEmpty) return;
+
+        currentPage =
+            (currentPage + 1) % hints.length;
+
+        _pageController.animateToPage(
+          currentPage,
+          duration:
+              const Duration(milliseconds: 400),
+          curve: Curves.easeInOut,
+        );
+      },
+    );
   }
 
   @override
   void dispose() {
     timer?.cancel();
     _controller.dispose();
+    _pageController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 52,
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      padding: const EdgeInsets.symmetric(horizontal: 14),
-      decoration: BoxDecoration(
-        color: const Color(0xfff2f2f2),
-        borderRadius: BorderRadius.circular(28), // pill shape
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.search, color: Colors.grey),
-          const SizedBox(width: 10),
-
-          Expanded(
-            child: Stack(
-              alignment: Alignment.centerLeft,
-              children: [
-
-                /// Animated Placeholder
-                if (_controller.text.isEmpty)
-                  ClipRect(
-                    child: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 400),
-                      transitionBuilder: (child, animation) {
-                        final slide = Tween<Offset>(
-                          begin: const Offset(0, 1),
-                          end: Offset.zero,
-                        ).animate(animation);
-
-                        return SlideTransition(
-                          position: slide,
-                          child: FadeTransition(
-                            opacity: animation,
-                            child: child,
-                          ),
-                        );
-                      },
-                      child: Text(
-                        hints[currentIndex],
-                        key: ValueKey(hints[currentIndex]),
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: colors[currentIndex],
-                        ),
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 450),
+      child: Container(
+        width: double.infinity,
+        height: 45,
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        decoration: BoxDecoration(
+          color: const Color(0xfff1f1f1),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          children: [
+            const Icon(Icons.search, size: 20, color: Colors.grey),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Stack(
+                alignment: Alignment.centerLeft,
+                children: [
+                  /// Smooth vertical slide using PageView
+                  if (_controller.text.isEmpty)
+                    SizedBox(
+                      height: 20,
+                      child: PageView.builder(
+                        controller: _pageController,
+                        scrollDirection: Axis.vertical,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: hints.length,
+                        itemBuilder: (context, index) {
+                          return Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              hints[index],
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.blue,
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ),
-                  ),
 
-                /// Real TextField
-                TextField(
-                  controller: _controller,
-                  onChanged: (_) => setState(() {}),
-                  onTap: () {
-                    setState(() {
-                      isTyping = true;
-                    });
-                  },
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    isDense: true,
+                  /// Real TextField
+                  TextField(
+                    controller: _controller,
+                    onChanged: (_) => setState(() {}),
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      isDense: true,
+                    ),
+                    style: const TextStyle(fontSize: 14),
                   ),
-                  style: const TextStyle(fontSize: 14),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-
-          /// Mic Icon (Optional)
-          const Icon(Icons.mic_none, color: Colors.grey),
-        ],
+          ],
+        ),
       ),
     );
   }

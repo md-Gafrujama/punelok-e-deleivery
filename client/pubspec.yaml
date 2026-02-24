@@ -25,15 +25,33 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
+      - assets/products/
       - assets/banner_img.png
       - assets/promo1.png
       - assets/promo2.png
       - assets/promo3.png
-      - assets/products/dairy_products.png
-      - assets/products/drinks_juice.png
-      - assets/products/fruit_veggies.png
-      - assets/products/pan_corner.png
-      - assets/products/breakfast_food.png
-      - assets/products/sweet_tooth.png
-      - assets/products/bakery_biscuit.png
       - assets/burger.jpeg
+      - assets/products/care/care1.png
+      - assets/products/care/care2.png
+      - assets/products/care/care3.png
+      - assets/products/care/care4.png
+      - assets/products/care/care5.png
+      - assets/products/care/care6.png
+      - assets/products/Grocery/grocery1.png
+      - assets/products/Grocery/grocery2.png
+      - assets/products/Grocery/grocery3.png
+      - assets/products/Grocery/grocery4.png
+      - assets/products/Grocery/grocery5.png
+      - assets/products/Grocery/grocery6.png
+      - assets/products/homecare/homecare1.png
+      - assets/products/homecare/homecare2.png
+      - assets/products/homecare/homecare3.png
+      - assets/products/homecare/homecare4.png
+      - assets/products/snacks/snacks1.png
+      - assets/products/snacks/snacks2.png
+      - assets/products/snacks/snacks3.png
+      - assets/products/snacks/snacks4.png
+      - assets/products/snacks/snacks5.png
+      - assets/products/snacks/snacks6.png
+     
+     
